@@ -18,7 +18,13 @@ export class ModalView extends Component<IModalData> {
 
       this.closeButton.addEventListener('click', this.close.bind(this));
       this.container.addEventListener('click', this.close.bind(this));
-      this.content.addEventListener('click', (event) => event.stopPropagation());
+      this.container.addEventListener("mousedown", (evt) => {
+        if (evt.target === evt.currentTarget) {
+          this.close();
+        }
+      });
+      this.handleEscUp = this.handleEscUp.bind(this);
+      this._content.addEventListener('click', event => event.stopPropagation());
   }
 
   set content(value: HTMLElement) {
@@ -32,9 +38,15 @@ export class ModalView extends Component<IModalData> {
 
   close() {
       this.container.classList.remove('modal_active');
-      this._content = null;
+      this.content = null;
       this.events.emit('modal:close');
   }
+
+  handleEscUp (evt: KeyboardEvent): void {
+    if (evt.key === "Escape") {
+      this.close();
+    }
+  };
 
   render(data: IModalData): HTMLElement {
       super.render(data);

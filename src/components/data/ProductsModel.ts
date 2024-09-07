@@ -1,7 +1,7 @@
 import { IProduct } from "../../types";
 import { IEvents } from "../base/events";
 
-export class ProductsModel {
+export class ProductsData {
 
   protected _items: IProduct[] = [];
 

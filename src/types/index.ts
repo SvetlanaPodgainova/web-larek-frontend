@@ -1,7 +1,7 @@
 // Интерфейс товара
 
 export interface IProduct {
-  category: TProductCategory
+  category: string;
   id: string;
   description: string;
   image: string;

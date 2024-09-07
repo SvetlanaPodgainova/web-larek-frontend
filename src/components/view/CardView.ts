@@ -1,31 +1,38 @@
-import { IProduct } from "../../types";
+import { IProduct, TProductCategory } from "../../types";
 import { ensureElement } from "../../utils/utils";
 import { Component } from "../base/Component";
 import { IEvents } from "../base/events";
 
-export class ProductView extends Component<IProduct> {
+export class CardView extends Component<IProduct> {
 
   protected productCategory: HTMLSpanElement;
+  protected productDescription: HTMLElement;
+  protected productImage: HTMLImageElement;
   protected productTitle: HTMLElement;
-  protected productImage: HTMLImageElement
   protected productPrice: HTMLSpanElement;
-  protected productId: string
+  protected basketButton: HTMLButtonElement;
+  protected productId: string;
 
 
   constructor(container: HTMLElement, protected events: IEvents) {
     super(container)
 
+    this.events = events;
     this.productCategory = ensureElement('.card__category', this.container);
-    this.productTitle = ensureElement('.card__title', this.container);
+    this.productDescription = ensureElement('.card__text') as HTMLParagraphElement;
     this.productImage = ensureElement('.card__image', this.container) as HTMLImageElement;
+    this.productTitle = ensureElement('.card__title', this.container);
     this.productPrice = ensureElement('.card__price', this.container);
-    this.container.addEventListener('click', () => this.events.emit('card:open', { id: this.productId }))
+    this.basketButton = this.container.querySelector('.card__button');
+
+    this.container.addEventListener('click', () => this.events.emit('card:open', { cardId: this.productId }));
 
   }
 
   set category(value: string) {
     this.setText(this.productCategory, value)
   }
+
 
   set title(value: string) {
     this.setText(this.productTitle, value)
@@ -47,6 +54,10 @@ export class ProductView extends Component<IProduct> {
     this.productId = value
   }
 
+  get id() {
+    return  this.productId
+  }
+
   render(data: Partial<IProduct>): HTMLElement {
     Object.assign(this as object, data) // добавляет св-сва из data в наш объект this
     return this.container
@@ -54,7 +65,7 @@ export class ProductView extends Component<IProduct> {
 
 }
 
-class ProductPreview extends ProductView {
+class ProductPreview extends CardView {
   protected productDescription: HTMLElement
   protected cardButton: HTMLButtonElement
 
