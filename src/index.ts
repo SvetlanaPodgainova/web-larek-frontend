@@ -6,7 +6,7 @@ import './scss/styles.scss';
 import { IProduct } from './types';
 import { cloneTemplate, ensureElement } from './utils/utils';
 import { API_URL, CDN_URL } from './utils/constants';
-import { LarekApi } from './components/data/LarekApi';
+import { LarekApi } from './components/base/LarekApi';
 import { ModalView } from './components/view/ModalView';
 
 const api = new LarekApi(CDN_URL, API_URL);

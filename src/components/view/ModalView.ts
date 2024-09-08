@@ -44,14 +44,11 @@ export class ModalView extends Component<IModalData> {
     this.container.classList.remove('modal_active');
     this.content = null;
     document.removeEventListener('keydown', this.handleEscape);
-    (document.activeElement as HTMLElement).blur();
-
     this.events.emit('modal:close');
   }
 
   handleEscape(evt: KeyboardEvent): void {
     if (evt.key === "Escape") {
-      console.log('Escape key pressed, closing...');
       this.close();
 
     }

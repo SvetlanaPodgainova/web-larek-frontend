@@ -1,4 +1,4 @@
-import { Api } from "../base/api";
+import { Api } from "./api";
 export class LarekApi extends Api {
     constructor(cdn, baseUrl, options) {
         super(baseUrl, options);
