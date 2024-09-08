@@ -1,5 +1,5 @@
 import { EventEmitter } from './components/base/events';
-import { ProductsData } from './components/data/ProductsModel';
+import { ProductsData } from './components/data/ProductsData';
 import { CardView } from './components/view/CardView';
 import { PageView } from './components/view/PageView';
 import './scss/styles.scss';
@@ -22,6 +22,7 @@ const productsData = new ProductsData(events);
 const page = new PageView(ensureElement('.gallery'), events)
 const modal = new ModalView(ensureElement('#modal-container'), events);
 
+
 //-------------------------------------------------------------------------->
 
 api.getProducts()
@@ -39,7 +40,7 @@ events.on("items:changed", () => {
 events.on("card:open", (data: { cardId: string }) => {
   const productItem = productsData.getItem(data.cardId);
   const cardItem = new CardView(cloneTemplate(previewTemplate), events);
-  modal.open()
+  
   modal.render({ content: cardItem.render(productItem) })
 }
 )
