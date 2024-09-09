@@ -29,8 +29,17 @@ export class CardView extends Component<IProduct> {
 
   }
 
+  Category: { [key: string]: string } = {
+    'софт-скил': 'card__category_soft',
+    'хард-скил': 'card__category_hard',
+    'дополнительное': 'card__category_additional',
+    'другое': 'card__category_other',
+    'кнопка': 'card__category_button',
+  };
+
   set category(value: string) {
     this.setText(this.productCategory, value)
+    this.toggleClass(this.productCategory, this.Category[value], true);
   }
 
 
@@ -55,7 +64,7 @@ export class CardView extends Component<IProduct> {
   }
 
   get id() {
-    return  this.productId
+    return this.productId
   }
 
   render(data: Partial<IProduct>): HTMLElement {
@@ -75,13 +84,13 @@ class ProductPreview extends CardView {
     this.productDescription = ensureElement(".card__text", this.container);
     this.cardButton = ensureElement('.card__button', this.container) as HTMLButtonElement;
 
-    this.cardButton.addEventListener('click', () => console.log(this.productId));    
+    this.cardButton.addEventListener('click', () => console.log(this.productId));
     this.cardButton.addEventListener('click', () => this.events.emit('basket:changed', { id: this.productId }))
   }
 
   set description(value: string) {
     this.setText(this.productDescription, value)
-   
+
   }
 
 
