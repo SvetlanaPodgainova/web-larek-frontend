@@ -3,7 +3,7 @@ import { ensureElement } from "../../utils/utils";
 import { Component } from "../base/Component";
 import { IEvents } from "../base/events";
 
-export class CardView extends Component<IProduct> {
+class CardView extends Component<IProduct> {
   
   protected productTitle: HTMLElement;
   protected productPrice: HTMLSpanElement;
@@ -24,7 +24,7 @@ export class CardView extends Component<IProduct> {
 
   }
 
-  Category: { [key: string]: string } = {
+  CategoryСolor: { [key: string]: string } = {
     'софт-скил': 'card__category_soft',
     'хард-скил': 'card__category_hard',
     'дополнительное': 'card__category_additional',
@@ -34,7 +34,7 @@ export class CardView extends Component<IProduct> {
 
   set category(value: string) {
     this.setText(this.productCategory, value)
-    this.toggleClass(this.productCategory, this.Category[value], true);
+    this.toggleClass(this.productCategory, this.CategoryСolor[value], true);
   }
 
 
@@ -65,12 +65,6 @@ export class CardView extends Component<IProduct> {
   set index (index: number) {
     this.setText(this.productIndex, `${index + 1}`);
 }
-
-  render(data: Partial<IProduct>): HTMLElement {
-    Object.assign(this as object, data) // добавляет св-сва из data в наш объект this
-    return this.container
-  }
-
 }
 
 export class CardGallery extends CardView {
