@@ -17,11 +17,11 @@ export class BasketModel {
     this.events.emit("basket:changed")
   } // удаляет товар из корзины
 
-  get total(): number {
+  getTotal(): number {
     return this.basket.reduce((acc, item) => acc + item.price, 0);
   } // считает итоговую цену всех товаров
 
-  get count(): number {
+  getCount(): number {
     return this.basket.length
   }
 

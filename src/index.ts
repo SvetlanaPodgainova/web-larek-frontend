@@ -13,8 +13,12 @@ const api = new LarekApi(CDN_URL, API_URL);
 const events = new EventEmitter();
 
 // темплейты
-const catalogTemplate: HTMLTemplateElement = document.querySelector('#card-catalog')
-const previewTemplate: HTMLTemplateElement = document.querySelector('#card-preview')
+const catalogTemplate: HTMLTemplateElement = document.querySelector('#card-catalog') // карточка в галерее
+const previewTemplate: HTMLTemplateElement = document.querySelector('#card-preview') // превью товара
+const basketTemplate: HTMLTemplateElement = document.querySelector('#basket') // корзина товаров
+const orderTemplate: HTMLTemplateElement = document.querySelector('#order') // модалка оформления заказа
+const contactsTemplate: HTMLTemplateElement = document.querySelector('#contacts') // модалка с контактами пользователя
+const succesTemplate: HTMLTemplateElement = document.querySelector('#contacts') // модалка успешного заказа
 
 
 // экземпляры классов
