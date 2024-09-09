@@ -1,6 +1,6 @@
 import { EventEmitter } from './components/base/events';
 import { ProductsData } from './components/data/ProductsData';
-import { CardView } from './components/view/CardView';
+import { CardGallery, cardPreview, cardBasket } from './components/view/CardView';
 import { PageView } from './components/view/PageView';
 import './scss/styles.scss';
 import { IProduct } from './types';
@@ -32,14 +32,14 @@ api.getProducts()
   .catch(err => console.log(err))
 
 events.on("items:changed", () => {
-  const productsHTMLArray = productsData.items.map(item => new CardView(cloneTemplate(catalogTemplate), events).render(item));
+  const productsHTMLArray = productsData.items.map(item => new CardGallery(cloneTemplate(catalogTemplate), events).render(item));
   page.render({ gallery: productsHTMLArray })
 })
 
 
 events.on("card:open", (data: { cardId: string }) => {
   const productItem = productsData.getItem(data.cardId);
-  const cardItem = new CardView(cloneTemplate(previewTemplate), events);
+  const cardItem = new cardPreview(cloneTemplate(previewTemplate), events);
   
   modal.render({ content: cardItem.render(productItem) })
 }

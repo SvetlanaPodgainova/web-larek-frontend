@@ -4,28 +4,23 @@ import { Component } from "../base/Component";
 import { IEvents } from "../base/events";
 
 export class CardView extends Component<IProduct> {
-
-  protected productCategory: HTMLSpanElement;
-  protected productDescription: HTMLElement;
-  protected productImage: HTMLImageElement;
+  
   protected productTitle: HTMLElement;
   protected productPrice: HTMLSpanElement;
-  protected basketButton: HTMLButtonElement;
   protected productId: string;
-
+  protected productCategory?: HTMLSpanElement;
+  protected productImage?: HTMLImageElement;
+  protected productDescription?: HTMLElement;  
+  protected basketButton?: HTMLButtonElement;
+  protected productIndex?: HTMLSpanElement;
 
   constructor(container: HTMLElement, protected events: IEvents) {
     super(container)
 
     this.events = events;
-    this.productCategory = ensureElement('.card__category', this.container);
-    this.productDescription = ensureElement('.card__text') as HTMLParagraphElement;
-    this.productImage = ensureElement('.card__image', this.container) as HTMLImageElement;
+
     this.productTitle = ensureElement('.card__title', this.container);
     this.productPrice = ensureElement('.card__price', this.container);
-    this.basketButton = this.container.querySelector('.card__button');
-
-    this.container.addEventListener('click', () => this.events.emit('card:open', { cardId: this.productId }));
 
   }
 
@@ -67,6 +62,10 @@ export class CardView extends Component<IProduct> {
     return this.productId
   }
 
+  set index (index: number) {
+    this.setText(this.productIndex, `${index + 1}`);
+}
+
   render(data: Partial<IProduct>): HTMLElement {
     Object.assign(this as object, data) // добавляет св-сва из data в наш объект this
     return this.container
@@ -74,25 +73,43 @@ export class CardView extends Component<IProduct> {
 
 }
 
-class ProductPreview extends CardView {
-  protected productDescription: HTMLElement
-  protected cardButton: HTMLButtonElement
+export class CardGallery extends CardView {
 
-  constructor(container: HTMLElement, protected events: IEvents) {
-    super(container, events)
+  constructor(protected container: HTMLElement, protected events: IEvents) {
+    super(container, events);
 
-    this.productDescription = ensureElement(".card__text", this.container);
-    this.cardButton = ensureElement('.card__button', this.container) as HTMLButtonElement;
+    this.productCategory = ensureElement('.card__category', this.container);
+    this.productImage = ensureElement('.card__image', this.container) as HTMLImageElement;
 
-    this.cardButton.addEventListener('click', () => console.log(this.productId));
-    this.cardButton.addEventListener('click', () => this.events.emit('basket:changed', { id: this.productId }))
+    if (this.container.classList.contains('gallery__item')) {
+      this.container.addEventListener('click', () => {
+        this.events.emit('card:open', { cardId: this.productId });
+      })
+    }
   }
-
-  set description(value: string) {
-    this.setText(this.productDescription, value)
-
-  }
-
-
 }
 
+
+export class cardPreview extends CardView {
+
+  constructor(protected container: HTMLElement, protected events: IEvents) {
+    super(container, events);
+
+    this.productCategory = ensureElement('.card__category', this.container);
+    this.productImage = ensureElement('.card__image', this.container) as HTMLImageElement;
+    this.productDescription = ensureElement('.card__text') as HTMLParagraphElement;
+    this.basketButton = ensureElement('.card__button', this.container) as HTMLButtonElement;
+}}
+
+
+export class cardBasket extends CardView {
+
+  constructor(protected container: HTMLElement, protected events: IEvents) {
+    super(container, events);
+
+    this.productIndex = ensureElement(".basket__item-index", this.container);
+    this.basketButton = ensureElement('.basket__item-delete', this.container) as HTMLButtonElement;
+    
+    this.basketButton.addEventListener('card:delete', () => {})
+
+}}
