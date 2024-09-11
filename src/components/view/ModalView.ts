@@ -10,16 +10,18 @@ interface IModalData {
 export class ModalView extends Component<IModalData> {
   protected closeButton: HTMLButtonElement;
   protected _content: HTMLElement;
+  protected wrapper: HTMLElement;
 
   constructor(container: HTMLElement, protected events: IEvents) {
     super(container);
 
     this.closeButton = ensureElement('.modal__close', this.container) as HTMLButtonElement;
     this._content = ensureElement('.modal__content', container) as HTMLElement;
+    this.wrapper = ensureElement('.page__wrapper');
 
     this._content.addEventListener('click', evt => evt.stopPropagation())
     this.closeButton.addEventListener('click', this.close.bind(this));
-    this.container.addEventListener('click', this.close.bind(this));
+    
     this.container.addEventListener("mousedown", (evt) => {
       if (evt.target === evt.currentTarget) {
         this.close();
@@ -38,7 +40,8 @@ export class ModalView extends Component<IModalData> {
         this.close();
       }
     })
-    this.events.emit('modal:open');
+    this.events.emit('modal:open');   
+    this.wrapper.classList.add('page__wrapper_locked') 
   }
 
   close() {
@@ -46,6 +49,7 @@ export class ModalView extends Component<IModalData> {
     this.content = null;
     document.removeEventListener('keydown', this.handleEscape);
     this.events.emit('modal:close');
+    this.wrapper.classList.remove('page__wrapper_locked') 
   }
 
   handleEscape(evt: KeyboardEvent): void {

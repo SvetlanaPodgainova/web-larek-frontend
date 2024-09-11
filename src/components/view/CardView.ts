@@ -4,13 +4,13 @@ import { Component } from "../base/Component";
 import { IEvents } from "../base/events";
 
 class CardView extends Component<IProduct> {
-  
+
   protected productTitle: HTMLElement;
   protected productPrice: HTMLSpanElement;
   protected productId: string;
   protected productCategory?: HTMLSpanElement;
   protected productImage?: HTMLImageElement;
-  protected productDescription?: HTMLElement;  
+  protected productDescription?: HTMLElement;
   protected basketButton?: HTMLButtonElement;
   protected productIndex?: HTMLSpanElement;
 
@@ -48,9 +48,15 @@ class CardView extends Component<IProduct> {
 
   set price(value: number | null) {
     if (value === null) {
-      this.setText(this.productPrice, `Бесценно`)
+      this.setText(this.productPrice, `Бесценно`);
+      if (this.basketButton) {
+        this.basketButton.disabled = true;
+      }
     } else {
-      this.setText(this.productPrice, `${value} синапсов`)
+      this.setText(this.productPrice, `${value} синапсов`);
+      if (this.basketButton) {
+        this.basketButton.disabled = false;
+      }
     }
   }
 
@@ -62,9 +68,9 @@ class CardView extends Component<IProduct> {
     return this.productId
   }
 
-  set index (index: number) {
+  set index(index: number) {
     this.setText(this.productIndex, `${index + 1}`);
-}
+  }
 }
 
 export class CardGallery extends CardView {
@@ -93,7 +99,37 @@ export class cardPreview extends CardView {
     this.productImage = ensureElement('.card__image', this.container) as HTMLImageElement;
     this.productDescription = ensureElement('.card__text') as HTMLParagraphElement;
     this.basketButton = ensureElement('.card__button', this.container) as HTMLButtonElement;
+
+    if (this.productPrice === null) {
+      this.basketButton.disabled = true;
+    }
+  }
+
+  // toggleButtonText(item: IProduct) {
+  //   if (item.inBasket) {
+  //     this.setText(this.basketButton, 'Убрать из корзины');
+  //   } else {
+  //     this.setText(this.basketButton, 'В корзину');
+  //   }
+  // }
+
+  toggleButtonText(item: IProduct) {
+    if (!item.inBasket) {
+      this.setText(this.basketButton, 'В корзину');
+      this.basketButton.addEventListener('click', () => {
+        this.events.emit('basket:changed', { id: this.productId })
+      })
+      
+    } else {
+      this.setText(this.basketButton, 'Удалить из корзины');
+
+  }
 }}
+
+
+    //   this.basketButton.addEventListener('click', () => {
+    //     this.events.emit('item:fromBasket', { cardId: this.productId });
+    // })
 
 
 export class cardBasket extends CardView {
@@ -103,7 +139,9 @@ export class cardBasket extends CardView {
 
     this.productIndex = ensureElement(".basket__item-index", this.container);
     this.basketButton = ensureElement('.basket__item-delete', this.container) as HTMLButtonElement;
-    
-    this.basketButton.addEventListener('card:delete', () => {})
 
-}}
+    this.basketButton.addEventListener('card:delete', () => { })
+
+  }
+}
+

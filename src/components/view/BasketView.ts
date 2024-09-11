@@ -33,8 +33,16 @@ export class BasketView extends Component<IProduct> {
         createElement<HTMLParagraphElement>('p', {
           textContent: 'Корзина пуста',
         }))
-      this.basketOrderButton.disabled = true
+      this.basketOrderButton.disabled = true;
     }
-
   }
+
+//   set buttonToggler(items: string[]) {
+//     if (!items.length) {
+//         this.setDisabled(this.basketOrderButton, true);
+//     } else {
+//         this.setDisabled(this.basketOrderButton, false);
+//     }
+// }
+
 }

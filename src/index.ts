@@ -1,5 +1,5 @@
 import { EventEmitter } from './components/base/events';
-import { ProductsData } from './components/data/ProductsData';
+import { PageData } from './components/data/PageData';
 import { CardGallery, cardPreview, cardBasket } from './components/view/CardView';
 import { PageView } from './components/view/PageView';
 import './scss/styles.scss';
@@ -21,33 +21,47 @@ const contactsTemplate: HTMLTemplateElement = document.querySelector('#contacts'
 const succesTemplate: HTMLTemplateElement = document.querySelector('#contacts') // модалка успешного заказа
 
 
-// экземпляры классов
-const productsData = new ProductsData(events);
+// экземпляры класса дан
+const pageData = new PageData(events);
 const page = new PageView(ensureElement('.gallery'), events)
 const modal = new ModalView(ensureElement('#modal-container'), events);
 
 
 //-------------------------------------------------------------------------->
 
+// Получаем картоки с сервера и отрисовываем
+
 api.getProducts()
   .then(data => {
-    productsData.items = data
+    pageData.items = data
   })
   .catch(err => console.log(err))
 
 events.on("items:changed", () => {
-  const productsHTMLArray = productsData.items.map(item => new CardGallery(cloneTemplate(catalogTemplate), events).render(item));
+  const productsHTMLArray = pageData.items.map(item => new CardGallery(cloneTemplate(catalogTemplate), events).render(item));
   page.render({ gallery: productsHTMLArray })
 })
 
+// Открытие превью карточки 
+
 
 events.on("card:open", (data: { cardId: string }) => {
-  const productItem = productsData.getItem(data.cardId);
-  const cardItem = new cardPreview(cloneTemplate(previewTemplate), events);
-  
-  modal.render({ content: cardItem.render(productItem) })
+  const productItem = pageData.getItem(data.cardId);
+  const cardInPreview = new cardPreview(cloneTemplate(previewTemplate), events);
+  cardInPreview.toggleButtonText(productItem);
+  modal.render({ content: cardInPreview.render(productItem) });
+  // events.emit("basket:changed", productItem)
 }
 )
 
+// Добавляем/удаляем товар в корзине
 
+
+  // events.on('basket:changed', (data: {cardId: string }) => {
+  //     pageData.basket.some((product) => product.id === data.cardId)
+  //     ? pageData.removeFromBasket(data.cardId)
+  //     : pageData.addToBasket(data.cardId);
+
+  // });
+  
 
