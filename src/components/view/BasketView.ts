@@ -17,7 +17,7 @@ export class BasketView extends Component<IBasketView> {
   constructor(container: HTMLElement, protected events: IEvents) {
     super(container)
 
-    this.basketList = ensureElement('.basket__list', this.container) as HTMLUListElement;
+    this.basketList = ensureElement('.basket__list', this.container);
     this.basketOrderButton = ensureElement('.basket__button', this.container) as HTMLButtonElement;
     this.basketTotalPrice = ensureElement('.basket__price', this.container);
 
@@ -30,17 +30,21 @@ export class BasketView extends Component<IBasketView> {
     this.setText(this.basketTotalPrice, `${value} синапсов`);
   }
 
-  set list(items: HTMLElement[]) {
-    if (items.length) {
-      this.basketList.replaceChildren(...items);
-    } else {
-      this.basketList.replaceChildren(
-        createElement<HTMLParagraphElement>('p', {
-          textContent: 'Корзина пуста',
-        }))
-      this.basketOrderButton.disabled = true;
-    }
-  }
+  // set list(items: HTMLElement[]) {
+  //   if (items.length) {
+  //     this.basketList.replaceChildren(...items);
+  //   } else {
+  //     this.basketList.replaceChildren(
+  //       createElement<HTMLParagraphElement>('p', {
+  //         textContent: 'Корзина пуста',
+  //       }))
+  //     this.basketOrderButton.disabled = true;
+  //   }
+  // }
 
+  set items(items: HTMLElement[]) {
+    this.basketList.replaceChildren(...items);
+    this.setDisabled(this.basketOrderButton, items.length === 0);
+}
 
 }

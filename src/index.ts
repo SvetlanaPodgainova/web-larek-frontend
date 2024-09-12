@@ -29,7 +29,7 @@ const pageView = new PageView(ensureElement('.gallery'), events)
 const modal = new ModalView(ensureElement('#modal-container'), events); // рамка для модалок
 
 const cardInPreview = new cardPreview(cloneTemplate(previewTemplate), events);
-const basketView = new BasketView(cloneTemplate(basketTemplate), events) // рамка корзины
+// const basketView = new BasketView(cloneTemplate(basketTemplate), events) // рамка корзины
 
 
 
@@ -62,56 +62,26 @@ events.on("card:open", (data: { cardId: string }) => {
 
 events.on('basket:change', (data: { id: string }) => {
   const productItem = pageData.getItem(data.id);
-
+// проверяем наличие товара в корзине
   productItem.inBasket
     ? pageData.removeFromBasket(productItem)
     : pageData.addToBasket(productItem);
  
   modal.close()
-  pageView.counter = pageData.getTotalBasketCount()  
+  pageView.counter = pageData.basket.length 
 })
 
+// Заполняем и отрисовываем модалку корзины
+
 events.on('basket:open', () => {
-basketView.list =  pageData.basket.map(product => {
-  const basketItem = new CardInBasket(cloneTemplate(basketContentTemplate), events);
-  return basketItem.render(product)})
-  modal.open()
-
-//   pageData.basket.map(product => {
-//     const basketItem = new CardInBasket(cloneTemplate(basketContentTemplate), events);
-//     return basketItem.render(product)
-  
-//  })
-
-
- 	// берем товары из модели корзины, инстанцируем для них карточки, рендерим и сохраняем в товары вьюшки корзины
-  //  basket.items = basketModel.products.map((item, index) => {
-	// 	const basketItem = new Card('card', cloneTemplate(basketItemTemplate);
-	// 	basketItem.basketIndex = index + 1; //записываем индекс товара чтобы отображать нумерованный список
-	// 	return basketItem.render(item);
-	// });
-
-
-	// Обновляет состояние корзины и уведомляет об изменениях
-	// updateBasket() {
-	// 	this.emitChanges('counter:changed', this.basket);  // Обновление счетчика товаров
-	// 	this.emitChanges('basket:changed', this.basket);  // Обновление корзины
-	// }
- 
-    
-  // })
-
-
-  // const cards = pageData.basket.map((products) => {
-  //   const cardInBasket = new CardInBasket(cloneTemplate(besketContentTemplate), events);
-  //  cardInBasket.render(products)
-  //  console.log(cardInBasket.render(products));
-   
-    
-  // })
-  // // basketView.list
-  // // modal.render({content: basketView.render({basketList: cards, totalPrice: pageData.getTotalBasketPrice()})})
-  // modal.open()
+  const basketView = new BasketView(cloneTemplate(basketTemplate), events) // оболочка корзины
+  // для каждого продукта в корзине отрисовываем его темплейт
+  const basketItem = pageData.basket.map((product) => {
+    const cardInBasket = new CardInBasket(cloneTemplate(basketContentTemplate), events);
+    return cardInBasket.render(product)
+  })
+  // контент модалки - отрисованная оболочка корзины, где список товаров - отрисованный темплейт
+  modal.render({content: basketView.render({items: basketItem, totalPrice: pageData.getTotalBasketPrice()}) })
 })
 
 

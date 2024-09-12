@@ -35,9 +35,9 @@ export class PageData {
     return this._basket.reduce((acc, item) => acc + item.price, 0);
   }
 
-  getTotalBasketCount(): number {
-    return this.basket.length
-  }
+  // getTotalBasketCount(): number {
+  //   return this.basket.length
+  // }
 
   get basket() {
     return this._basket
