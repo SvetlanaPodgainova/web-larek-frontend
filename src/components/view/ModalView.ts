@@ -21,6 +21,8 @@ export class ModalView extends Component<IModalData> {
 
     this._content.addEventListener('click', evt => evt.stopPropagation())
     this.closeButton.addEventListener('click', this.close.bind(this));
+
+    this.handleEscape = this.handleEscape.bind(this) // по нажатию на esc
     
     this.container.addEventListener("mousedown", (evt) => {
       if (evt.target === evt.currentTarget) {
@@ -35,11 +37,7 @@ export class ModalView extends Component<IModalData> {
 
   open() {
     this.container.classList.add('modal_active');
-    document.addEventListener('keydown', (evt) => {
-      if (evt.key === "Escape") {
-        this.close();
-      }
-    })
+    document.addEventListener('keyup', this.handleEscape)
     this.events.emit('modal:open');   
     this.wrapper.classList.add('page__wrapper_locked') 
   }
@@ -55,7 +53,6 @@ export class ModalView extends Component<IModalData> {
   handleEscape(evt: KeyboardEvent): void {
     if (evt.key === "Escape") {
       this.close();
-
     }
   };
 

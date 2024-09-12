@@ -3,26 +3,31 @@ import { createElement, ensureElement } from "../../utils/utils";
 import { Component } from "../base/Component";
 import { IEvents } from "../base/events";
 
-export class BasketView extends Component<IProduct> {
+export interface IBasketView  {
+	  items: HTMLElement[];
+    totalPrice: number;    
+}
 
-  protected basketList: HTMLUListElement;
+export class BasketView extends Component<IBasketView> {
+
+  protected basketList: HTMLElement;
   protected basketOrderButton: HTMLButtonElement;
-  protected basketPrice: HTMLSpanElement;
+  protected basketTotalPrice: HTMLSpanElement;
 
   constructor(container: HTMLElement, protected events: IEvents) {
     super(container)
 
     this.basketList = ensureElement('.basket__list', this.container) as HTMLUListElement;
     this.basketOrderButton = ensureElement('.basket__button', this.container) as HTMLButtonElement;
-    this.basketPrice = ensureElement('.basket__price', this.container);
+    this.basketTotalPrice = ensureElement('.basket__price', this.container);
 
     this.basketOrderButton.addEventListener('click', () => {
       this.events.emit('order:open');
     });
   }
 
-  set price(value: number) {
-    this.setText(this.basketPrice, `${value} синапсов`);
+  set totalPrice(value: number) {
+    this.setText(this.basketTotalPrice, `${value} синапсов`);
   }
 
   set list(items: HTMLElement[]) {
@@ -37,12 +42,5 @@ export class BasketView extends Component<IProduct> {
     }
   }
 
-//   set buttonToggler(items: string[]) {
-//     if (!items.length) {
-//         this.setDisabled(this.basketOrderButton, true);
-//     } else {
-//         this.setDisabled(this.basketOrderButton, false);
-//     }
-// }
 
 }

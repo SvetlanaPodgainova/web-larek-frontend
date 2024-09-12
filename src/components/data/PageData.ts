@@ -6,61 +6,40 @@ export class PageData {
   protected _items: IProduct[] = [];
   protected _basket: IProduct[] = []
 
-  constructor(protected events: IEvents) {}
+  constructor(protected events: IEvents) { }
+
+  set items(products: IProduct[]) {
+    this._items = products;
+    this.events.emit("items:changed")
+  }
+
+  get items() {
+    return this._items
+  }
 
   getItem(id: string): IProduct {
     return this.items.find((item) => item.id === id);
-  }; // возвращает один товар для использования
-
-  // addToBasket(item: IProduct): void {
-  //   this.basket.push(item);
-  //   // item.inBasket = true;
-  //   this.events.emit("basket:changed")
-  // } // добавляет товар по айди в корзину
-
-  addToBasket(id: string): void {
-    const item = this.getItem(id);
-    if (item) {
-      this.basket.push(item);
-      item.inBasket = true;
-      
-      
-    } console.log("add");
   }
 
-  removeFromBasket(id: string): void {
-    this._basket = this._basket.filter(basketItem => basketItem.id === id);
+  addToBasket(item: IProduct): void {
+    item.inBasket = true;
+    this._basket.push(item);
+  }
+
+  removeFromBasket(item: IProduct): void {
     item.inBasket = false;
-    // this.events.emit("basket:changed")
-  } // удаляет товар из корзины
+    this._basket = this._basket.filter((basketItem) => basketItem.id !== item.id);
+  }
 
-  // removeFromBasket(id: string): void {
-  //   this._basket = this._basket.filter((basketItem) => basketItem.id === item.id);
-  //   // item.inBasket = false;
-  //   this.events.emit("basket:changed")
-  // } // удаляет товар из корзины
+  getTotalBasketPrice(): number {
+    return this._basket.reduce((acc, item) => acc + item.price, 0);
+  }
 
-//   set basket(products: IProduct) {
-// this._basket = products
-//   }
-set basket(products: IProduct[]) {
-  this._basket = products;
+  getTotalBasketCount(): number {
+    return this.basket.length
   }
 
   get basket() {
     return this._basket
   }
-
-  set items(products: IProduct[]) {
-    this._items = products;
-    this.events.emit("items:changed")}
-
-  get items() {
-    return this._items
-  }
-   
-  }
-
-
-
-
+}

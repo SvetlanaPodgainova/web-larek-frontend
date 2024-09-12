@@ -7,7 +7,7 @@ export interface IProduct {
   image: string;
   title: string;
   price: number | null;
-  inBasket: boolean;
+  inBasket?: boolean;
 }
 
 // Тип категории товаров

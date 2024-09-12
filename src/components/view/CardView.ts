@@ -11,7 +11,7 @@ class CardView extends Component<IProduct> {
   protected productCategory?: HTMLSpanElement;
   protected productImage?: HTMLImageElement;
   protected productDescription?: HTMLElement;
-  protected basketButton?: HTMLButtonElement;
+  protected buttonToBasket?: HTMLButtonElement;
   protected productIndex?: HTMLSpanElement;
 
   constructor(container: HTMLElement, protected events: IEvents) {
@@ -33,11 +33,13 @@ class CardView extends Component<IProduct> {
   };
 
   set category(value: string) {
-    this.setText(this.productCategory, value)
-    this.toggleClass(this.productCategory, this.CategoryСolor[value], true);
+    this.setText(this.productCategory, value);
+    if (this.productCategory) {
+      this.toggleClass(this.productCategory, this.CategoryСolor[value], true);
+    }    
   }
 
-
+ 
   set title(value: string) {
     this.setText(this.productTitle, value)
   }
@@ -49,14 +51,12 @@ class CardView extends Component<IProduct> {
   set price(value: number | null) {
     if (value === null) {
       this.setText(this.productPrice, `Бесценно`);
-      if (this.basketButton) {
-        this.basketButton.disabled = true;
-      }
+      this.setText(this.buttonToBasket, 'Товар бесценен')
+      this.setDisabled(this.buttonToBasket, true)
+
     } else {
       this.setText(this.productPrice, `${value} синапсов`);
-      if (this.basketButton) {
-        this.basketButton.disabled = false;
-      }
+      this.setDisabled(this.buttonToBasket, false)
     }
   }
 
@@ -89,7 +89,6 @@ export class CardGallery extends CardView {
   }
 }
 
-
 export class cardPreview extends CardView {
 
   constructor(protected container: HTMLElement, protected events: IEvents) {
@@ -98,49 +97,29 @@ export class cardPreview extends CardView {
     this.productCategory = ensureElement('.card__category', this.container);
     this.productImage = ensureElement('.card__image', this.container) as HTMLImageElement;
     this.productDescription = ensureElement('.card__text') as HTMLParagraphElement;
-    this.basketButton = ensureElement('.card__button', this.container) as HTMLButtonElement;
+    this.buttonToBasket = ensureElement('.card__button', this.container) as HTMLButtonElement;
 
-    if (this.productPrice === null) {
-      this.basketButton.disabled = true;
-    }
+    this.buttonToBasket.addEventListener('click', () => {
+      this.events.emit('basket:change', { id: this.productId })
+    })
   }
-
-  // toggleButtonText(item: IProduct) {
-  //   if (item.inBasket) {
-  //     this.setText(this.basketButton, 'Убрать из корзины');
-  //   } else {
-  //     this.setText(this.basketButton, 'В корзину');
-  //   }
-  // }
 
   toggleButtonText(item: IProduct) {
-    if (!item.inBasket) {
-      this.setText(this.basketButton, 'В корзину');
-      this.basketButton.addEventListener('click', () => {
-        this.events.emit('basket:changed', { id: this.productId })
-      })
-      
+    if (item.inBasket) {
+      this.setText(this.buttonToBasket, 'Удалить из корзины');
     } else {
-      this.setText(this.basketButton, 'Удалить из корзины');
-
+      this.setText(this.buttonToBasket, 'В корзину');
+    }
   }
-}}
+}
 
-
-    //   this.basketButton.addEventListener('click', () => {
-    //     this.events.emit('item:fromBasket', { cardId: this.productId });
-    // })
-
-
-export class cardBasket extends CardView {
+export class CardInBasket extends CardView {
 
   constructor(protected container: HTMLElement, protected events: IEvents) {
     super(container, events);
 
     this.productIndex = ensureElement(".basket__item-index", this.container);
-    this.basketButton = ensureElement('.basket__item-delete', this.container) as HTMLButtonElement;
-
-    this.basketButton.addEventListener('card:delete', () => { })
+    this.buttonToBasket = ensureElement('.basket__item-delete', this.container) as HTMLButtonElement;
 
   }
 }
