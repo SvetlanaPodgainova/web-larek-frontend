@@ -1,5 +1,5 @@
-import { IProduct } from "../../types";
-import { IEvents } from "../base/events";
+import { IProduct } from '../../types';
+import { IEvents } from '../base/events';
 
 export class PageData {
 
@@ -10,7 +10,7 @@ export class PageData {
 
   set items(products: IProduct[]) {
     this._items = products;
-    this.events.emit("items:changed")
+    this.events.emit('items:changed')
   }
 
   get items() {
@@ -34,10 +34,6 @@ export class PageData {
   getTotalBasketPrice(): number {
     return this._basket.reduce((acc, item) => acc + item.price, 0);
   }
-
-  // getTotalBasketCount(): number {
-  //   return this.basket.length
-  // }
 
   get basket() {
     return this._basket

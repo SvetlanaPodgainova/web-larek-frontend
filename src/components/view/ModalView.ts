@@ -1,7 +1,7 @@
-import { IProduct } from "../../types";
-import { ensureElement } from "../../utils/utils";
-import { Component } from "../base/Component";
-import { IEvents } from "../base/events";
+import { IProduct } from '../../types';
+import { ensureElement } from '../../utils/utils';
+import { Component } from '../base/Component';
+import { IEvents } from '../base/events';
 
 interface IModalData {
   content: HTMLElement;
@@ -24,7 +24,7 @@ export class ModalView extends Component<IModalData> {
 
     this.handleEscape = this.handleEscape.bind(this) // по нажатию на esc
     
-    this.container.addEventListener("mousedown", (evt) => {
+    this.container.addEventListener('mousedown', (evt) => {
       if (evt.target === evt.currentTarget) {
         this.close();
       }
@@ -51,7 +51,7 @@ export class ModalView extends Component<IModalData> {
   }
 
   handleEscape(evt: KeyboardEvent): void {
-    if (evt.key === "Escape") {
+    if (evt.key === 'Escape') {
       this.close();
     }
   };

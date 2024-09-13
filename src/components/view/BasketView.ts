@@ -1,11 +1,11 @@
-import { IProduct } from "../../types";
-import { createElement, ensureElement } from "../../utils/utils";
-import { Component } from "../base/Component";
-import { IEvents } from "../base/events";
+import { IProduct } from '../../types';
+import { createElement, ensureElement } from '../../utils/utils';
+import { Component } from '../base/Component';
+import { IEvents } from '../base/events';
 
-export interface IBasketView  {
-	  items: HTMLElement[];
-    totalPrice: number;    
+export interface IBasketView {
+  items: HTMLElement[];
+  totalPrice: number;
 }
 
 export class BasketView extends Component<IBasketView> {
@@ -30,21 +30,15 @@ export class BasketView extends Component<IBasketView> {
     this.setText(this.basketTotalPrice, `${value} синапсов`);
   }
 
-  // set list(items: HTMLElement[]) {
-  //   if (items.length) {
-  //     this.basketList.replaceChildren(...items);
-  //   } else {
-  //     this.basketList.replaceChildren(
-  //       createElement<HTMLParagraphElement>('p', {
-  //         textContent: 'Корзина пуста',
-  //       }))
-  //     this.basketOrderButton.disabled = true;
-  //   }
-  // }
-
   set items(items: HTMLElement[]) {
-    this.basketList.replaceChildren(...items);
-    this.setDisabled(this.basketOrderButton, items.length === 0);
-}
-
+    if (items.length) {
+      this.basketList.replaceChildren(...items);
+    } else {
+      this.basketList.replaceChildren(
+        createElement<HTMLParagraphElement>('p', {
+          textContent: 'В корзине пусто, корзине грустно :(',
+        }))
+      this.basketOrderButton.disabled = true;
+    }
+  }
 }

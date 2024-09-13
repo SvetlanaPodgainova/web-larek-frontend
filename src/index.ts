@@ -43,16 +43,15 @@ api.getProducts()
   })
   .catch(err => console.log(err))
 
-events.on("items:changed", () => {
+events.on('items:changed', () => {
   const productsHTMLArray = pageData.items.map(item => new CardGallery(cloneTemplate(catalogTemplate), events).render(item));
   pageView.render({ gallery: productsHTMLArray })
 })
 
 // Открытие превью карточки 
 
-events.on("card:open", (data: { cardId: string }) => {
+events.on('card:open', (data: { cardId: string }) => {
   const productItem = pageData.getItem(data.cardId);
-  
   cardInPreview.toggleButtonText(productItem); // переключаем текст кнопки
   modal.render({ content: cardInPreview.render(productItem) });     
 }
@@ -76,23 +75,36 @@ events.on('basket:change', (data: { id: string }) => {
 events.on('basket:open', () => {
   const basketView = new BasketView(cloneTemplate(basketTemplate), events) // оболочка корзины
   // для каждого продукта в корзине отрисовываем его темплейт
-  const basketItem = pageData.basket.map((product) => {
+  const basketItem = pageData.basket.map((product, index) => {
     const cardInBasket = new CardInBasket(cloneTemplate(basketContentTemplate), events);
+    cardInBasket.index = index
     return cardInBasket.render(product)
   })
   // контент модалки - отрисованная оболочка корзины, где список товаров - отрисованный темплейт
   modal.render({content: basketView.render({items: basketItem, totalPrice: pageData.getTotalBasketPrice()}) })
 })
 
+// Если продукт удалили из корзины, удаляем его из массива и перерисовываем счетчик
+events.on('basket:remove', (data: {id: string}) => {
+  pageData.removeFromBasket(pageData.getItem(data.id));
+  pageView.counter = pageData.basket.length 
+})
+
+// Оформление заказа
+events.on('order:open', () => {
+  const 
+  modal.render({content: })
+})
+
 
 
 
 // const ggg : IProduct = {
-//   category: "string",
-//   id: "string",
-//   description: "string",
-//   image: "string",
-//   title: "string",
+//   category: 'string',
+//   id: 'string',
+//   description: 'string',
+//   image: 'string',
+//   title: 'string',
 //   price:  null
   
 // }
