@@ -29,12 +29,12 @@ export interface IOrderData {
   items: string[];
 }
 
-// Интерфейс для умпешного заказа
+// Интерфейс для уcпешного заказа
 
-export interface IOrderResult {
-  id: string;
-  total: number;
-}
+// export interface IOrderResult {
+//   id: string;
+//   total: number;
+// }
 
 
 

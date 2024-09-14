@@ -10,11 +10,11 @@ interface IPage {
 }
 
 export class PageView extends Component<IPage> {
- 
+
   protected productContainer: HTMLElement;
   protected basketIcon: HTMLButtonElement;
   protected basketCounter: HTMLElement;
- 
+
   constructor(container: HTMLElement, protected events: IEvents) {
     super(container)
     this.productContainer = ensureElement('.gallery');
@@ -26,7 +26,6 @@ export class PageView extends Component<IPage> {
     });
   }
 
-  // св-ство gallery = this.productContainer с замененным на items контентом
   set gallery(items: HTMLElement[]) {
     this.productContainer.replaceChildren(...items)
   }

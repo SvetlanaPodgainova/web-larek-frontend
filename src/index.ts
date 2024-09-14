@@ -90,11 +90,11 @@ events.on('basket:remove', (data: {id: string}) => {
   pageView.counter = pageData.basket.length 
 })
 
-// Оформление заказа
-events.on('order:open', () => {
-  const 
-  modal.render({content: })
-})
+// // Оформление заказа
+// events.on('order:open', () => {
+//   const 
+//   modal.render({content: })
+// })
 
 
 

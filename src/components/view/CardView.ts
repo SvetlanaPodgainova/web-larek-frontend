@@ -21,7 +21,6 @@ class CardView extends Component<IProduct> {
 
     this.productTitle = ensureElement('.card__title', this.container);
     this.productPrice = ensureElement('.card__price', this.container);
-
   }
 
   CategoryСolor: { [key: string]: string } = {
