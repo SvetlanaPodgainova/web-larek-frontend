@@ -13,6 +13,7 @@ class CardView extends Component<IProduct> {
   protected productDescription?: HTMLElement;
   protected cardButton?: HTMLButtonElement;
   protected productIndex?: HTMLSpanElement;
+  protected basketDeleteButton?: HTMLButtonElement;
 
   constructor(container: HTMLElement, protected events: IEvents) {
     super(container)
@@ -124,9 +125,11 @@ export class CardInBasket extends CardView {
 
     this.productIndex = ensureElement('.basket__item-index', this.container);
     this.cardButton = ensureElement('.basket__item-delete', this.container) as HTMLButtonElement;
+   
 
     this.cardButton.addEventListener('click', () => {
       this.deleteProduct()
+      this.container = null;
       events.emit('basket:remove', {id: this.productId})      
     })
 

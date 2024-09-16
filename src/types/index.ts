@@ -1,7 +1,7 @@
 // Интерфейс товара
 
 export interface IProduct {
-  category: string;
+  category: TProductCategory;
   id: string;
   description: string;
   image: string;
@@ -29,12 +29,26 @@ export interface IOrderData {
   items: string[];
 }
 
+// Интерфейс для формы олпаты
+
+export interface IPaymentForm {
+	payment: string;
+	address: string;
+}
+
+// Интерфейс для формы контактов
+
+export interface IContactsForm {
+  email: string;
+  phone: string;
+}
+
 // Интерфейс для уcпешного заказа
 
-// export interface IOrderResult {
-//   id: string;
-//   total: number;
-// }
+export interface IOrderResult {
+  id: string;
+  total: number;
+}
 
 
 
