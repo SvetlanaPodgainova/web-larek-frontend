@@ -20,7 +20,7 @@ export type TPaymentMethod = "online" | "offline"
 
 // Интерфейс для объекта пользователя, который отправляем на сервер
 
-export interface IOrderData {
+export interface IOrder {
   payment: TPaymentMethod;
   email: string;
   phone: string;

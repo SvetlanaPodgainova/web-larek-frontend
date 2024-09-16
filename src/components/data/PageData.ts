@@ -1,10 +1,16 @@
-import { IProduct } from '../../types';
+import { IContactsForm, IPaymentForm, IProduct } from '../../types';
 import { IEvents } from '../base/events';
 
 export class PageData {
 
   protected _items: IProduct[] = [];
-  protected _basket: IProduct[] = []
+  protected _basket: IProduct[] = [];
+  protected order: IPaymentForm & IContactsForm = {
+		payment: '',
+		address: '',
+		email: '',
+		phone: ''
+	};
 
   constructor(protected events: IEvents) { }
 
