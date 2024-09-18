@@ -20,7 +20,7 @@ export type TPaymentMethod = "online" | "offline"
 
 // Интерфейс для объекта пользователя, который отправляем на сервер
 
-export interface IOrder {
+export interface IOrderData {
   payment: TPaymentMethod;
   email: string;
   phone: string;
@@ -49,6 +49,10 @@ export interface IOrderResult {
   id: string;
   total: number;
 }
+
+// Интерфейс для ошибок
+
+export type FormErrors = Partial<Record<keyof IOrderData, string>>;
 
 
 

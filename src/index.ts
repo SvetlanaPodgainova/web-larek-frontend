@@ -3,12 +3,14 @@ import { PageData } from './components/data/PageData';
 import { CardGallery, cardPreview, CardInBasket } from './components/view/CardView';
 import { PageView } from './components/view/PageView';
 import './scss/styles.scss';
-import { IProduct } from './types';
+import { IContactsForm, IPaymentForm, IProduct } from './types';
 import { cloneTemplate, ensureElement } from './utils/utils';
 import { API_URL, CDN_URL } from './utils/constants';
 import { LarekApi } from './components/base/LarekApi';
 import { ModalView } from './components/view/ModalView';
 import { BasketView } from './components/view/BasketView';
+import { PaymentForm } from './components/view/PaymentForm';
+import { ContactsForm } from './components/view/ContactsForm';
 
 const api = new LarekApi(CDN_URL, API_URL);
 const events = new EventEmitter();
@@ -18,9 +20,9 @@ const catalogTemplate: HTMLTemplateElement = document.querySelector('#card-catal
 const previewTemplate: HTMLTemplateElement = document.querySelector('#card-preview') // превью товара
 const basketTemplate: HTMLTemplateElement = document.querySelector('#basket') // корзина товаров
 const basketContentTemplate: HTMLTemplateElement = document.querySelector('#card-basket') // контент для корзины
-const orderTemplate: HTMLTemplateElement = document.querySelector('#order') // модалка оформления заказа
-const contactsTemplate: HTMLTemplateElement = document.querySelector('#contacts') // модалка с контактами пользователя
-const succesTemplate: HTMLTemplateElement = document.querySelector('#contacts') // модалка успешного заказа
+const paymentTemplate: HTMLTemplateElement = document.querySelector('#order') // для модалки со способами оплаты
+const contactsTemplate: HTMLTemplateElement = document.querySelector('#contacts') // для модалки с контактами пользователя
+const succesTemplate: HTMLTemplateElement = document.querySelector('#contacts') // для модалки успешного заказа
 
 
 // экземпляры классов
@@ -30,8 +32,8 @@ const modal = new ModalView(ensureElement('#modal-container'), events); // ра�
 
 const cardInPreview = new cardPreview(cloneTemplate(previewTemplate), events);
 // const basketView = new BasketView(cloneTemplate(basketTemplate), events) // рамка корзины
-
-
+const paymentForm = new PaymentForm(cloneTemplate(paymentTemplate), events)
+const contactsForm = new ContactsForm(cloneTemplate(contactsTemplate), events)
 
 //-------------------------------------------------------------------------------------------------------->
 
@@ -84,17 +86,73 @@ events.on('basket:open', () => {
   modal.render({content: basketView.render({items: basketItem, totalPrice: pageData.getTotalBasketPrice()}) })
 })
 
-// Если продукт удалили из корзины, удаляем его из массива и перерисовываем счетчик
+// Если продукт удалили из корзины в модальном окне, удаляем его из массива и перерисовываем счетчик
 events.on('basket:remove', (data: {id: string}) => {
   pageData.removeFromBasket(pageData.getItem(data.id));
   pageView.counter = pageData.basket.length 
 })
 
-// // Оформление заказа
-// events.on('order:open', () => {
-//   const 
-//   modal.render({content: })
-// })
+// Оформление заказа 
+// способ оплаты
+
+events.on('order:open', () => {
+  modal.render({content: paymentForm.render({
+    valid: false,
+    errors: [],
+    payment: '',
+    address: '',
+  })})
+})
+
+// Изменения в полях формы оплаты
+
+events.on(
+	/^order\..*:change/,
+	(data: { field: keyof IPaymentForm; value: string }) => {
+    pageData.setPaymentFormField(data.field, data.value)		
+	}
+);
+
+// Проверка валидации формы оплаты
+
+events.on('form.payment:change', (errors: Partial<IPaymentForm>) => {
+  const { address, payment } = errors;
+  paymentForm.valid = !payment && !address;
+  paymentForm.errors = Object.values({ payment, address })
+  	.filter((i) => !!i)
+		.join('; ');
+})
+
+// контактные данные
+
+events.on('order:submit', () => {
+    modal.render({content: contactsForm.render({
+    valid: false,
+    errors: [],
+    phone: '',
+    email: '',})})
+})
+
+// Изменения в полях формы 
+
+events.on(
+	/^contacts\..*:change/,
+	(data: { field: keyof IContactsForm; value: string }) => {
+		pageData.setContactsFormField(data.field, data.value);
+	}
+);
+
+
+// Проверка валидации формы 
+
+events.on('form.contacts:change', (errors: Partial<IContactsForm>) => {
+  const { email, phone } = errors;
+ contactsForm.valid = !email && !phone;
+ contactsForm.errors = Object.values({ email, phone })
+  	.filter((i) => !!i)
+		.join('; ');
+})
+
 
 
 

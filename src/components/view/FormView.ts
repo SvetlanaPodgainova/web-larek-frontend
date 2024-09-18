@@ -23,6 +23,8 @@ export class FormView<T> extends Component<IFormState> {
       const field = target.name as keyof T; // имя инпута - ключ
       const value = target.value; // введённые данные в инпут
       this.onInputChange(field, value);
+
+      this._submit
     });
 
     this.container.addEventListener('submit', (e: Event) => {
@@ -42,7 +44,7 @@ export class FormView<T> extends Component<IFormState> {
     this._submit.disabled = !value;
   }
 
-  set errors(value: string) {
+    set errors(value: string) {
     this.setText(this._errors, value);
   }
 
@@ -51,6 +53,7 @@ export class FormView<T> extends Component<IFormState> {
     const { valid, errors, ...inputs } = state;
     super.render({ valid, errors });
     Object.assign(this, inputs);
+    this._submit.disabled = !valid;
     return this.container;
 
   }

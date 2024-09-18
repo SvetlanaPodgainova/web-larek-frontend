@@ -57,7 +57,7 @@ yarn build
 - image: string - изображение товара;
 - title: string - название товара;
 - price: number | null - цена товара (может быть числом либо null для бесценного товара);
-- inBasket?: boolean - булевое значение, показывает наличие/отсутствие товара в корзине;
+- inBasket?: boolean - булевое значение, свойство показывает наличие/отсутствие товара в корзине;
 
 #### Интерфейс IOrderData
 
@@ -166,9 +166,9 @@ yarn build
 - get basket() - возвращает содержимое корзины.
 - clearShoppingCart() - очищает корзину покупателя после завершения заказа.
 - clearOrder() - очищает все поля форм заказа после его завершения.
-- setUserDataField(field: keyof IPaymentForm, value: string) - сохраняет данные, введенные в поле формы, в объект IPaymentForm.
-- setUserContactsField(field: keyof IContactsFor, value: string) - сохраняет данные, введенные в поле формы, в объект IContactsFor.
-- validateUserData() - валидирует данные, введенные в поля формы оплаты.
+- setPaymentFormField(field: keyof IPaymentForm, value: string) - сохраняет данные, введенные в поле формы, в объект IPaymentForm.
+- setContactsFormField(field: keyof IContactsForm, value: string) - сохраняет данные, введенные в поле формы, в объект IContactsFor.
+- validatePaymentForm() - валидирует данные, введенные в поля формы оплаты.
 - validateUserContacts() - валидирует данные, введенные в поля формы контактных данных.
 
 ### Слой отображения
@@ -366,16 +366,22 @@ phone: string - номер телефона пользователя.
 
 События приложения:
 
-- items:changed -
+- items:changed - изменения массива товаров.
 - card:open - открытие карточки товара из галереи.
 - modal:open - открытие модального окна.
 - modal:closed - закрытие модального окна.
 - basket:change - изменение корзины товаров.
 - basket:remove - удаление товара из корзины в модальном окне.
-- order:open - переход к оформлению заказа (на страницу оплаты).
-- order.payment:change - выбор способа оплаты.
-- order.address:change- ввода адреса для заказа.
-- order.payment:submit - сохранение данных в форме оплаты.
+- order:open - начало оформеления заказа, переход на форму оплаты.
+- order:submit - переход от формы оплаты к контактным данным.
+- order.address:change - изменение поля ввода ввода адреса для заказа.
+- form.payment:change - изменение валидации формы оплаты.
 - contacts.email:change - изменение поля ввода электронной почты в форме для контактов.
 - contacts.phone:change - изменение поля ввода номера телефона в форме для контактов.
+- form.contacts:change - изменение валидации формы контактных данных.
+
+
+
+
+
 - contacts:submit - сохранение данных в форме в форме для контактов.
