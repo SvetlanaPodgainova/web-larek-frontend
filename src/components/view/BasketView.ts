@@ -38,18 +38,13 @@ export class BasketView extends Component<IBasketView> {
       this.basketList.replaceChildren(
         createElement<HTMLParagraphElement>('p', {
           textContent: 'В корзине пусто, корзине грустно :(',
-        }))
-      this.basketOrderButton.disabled = true;
-      
+        }))        
     }
   }
 
   set buttonToggler(items: string[]) {
-    if (!items.length) {
-        this.setDisabled(this.basketOrderButton, true);
-    } else {
-        this.setDisabled(this.basketOrderButton, false);
-    }
-}
-
+    items.length
+      ? this.setDisabled(this.basketOrderButton, false)
+      : this.setDisabled(this.basketOrderButton, true);
+  }
 }

@@ -2,7 +2,7 @@ import { EventEmitter } from './components/base/events';
 import { PageData } from './components/data/PageData';
 import { CardGallery, cardPreview, CardInBasket } from './components/view/CardView';
 import { PageView } from './components/view/PageView';
-import './scss/styles.scss';
+import '/src/scss/styles.scss';
 import { IContactsForm, IPaymentForm, IProduct } from './types';
 import { cloneTemplate, ensureElement } from './utils/utils';
 import { API_URL, CDN_URL } from './utils/constants';
@@ -11,6 +11,7 @@ import { ModalView } from './components/view/ModalView';
 import { BasketView } from './components/view/BasketView';
 import { PaymentForm } from './components/view/PaymentForm';
 import { ContactsForm } from './components/view/ContactsForm';
+import { SuccessOrder } from './components/view/SuccessOrder';
 
 const api = new LarekApi(CDN_URL, API_URL);
 const events = new EventEmitter();
@@ -22,19 +23,18 @@ const basketTemplate: HTMLTemplateElement = document.querySelector('#basket') //
 const basketContentTemplate: HTMLTemplateElement = document.querySelector('#card-basket') // контент для корзины
 const paymentTemplate: HTMLTemplateElement = document.querySelector('#order') // для модалки со способами оплаты
 const contactsTemplate: HTMLTemplateElement = document.querySelector('#contacts') // для модалки с контактами пользователя
-const succesTemplate: HTMLTemplateElement = document.querySelector('#contacts') // для модалки успешного заказа
+const succesTemplate: HTMLTemplateElement = document.querySelector('#success') // для модалки успешного заказа
 
 
 // экземпляры классов
 const pageData = new PageData(events);
 const pageView = new PageView(ensureElement('.gallery'), events)
 const modal = new ModalView(ensureElement('#modal-container'), events); // рамка для модалок
-const basketView = new BasketView(cloneTemplate(basketTemplate), events); // оболочка корзины
-
 const cardInPreview = new cardPreview(cloneTemplate(previewTemplate), events);
-// const basketView = new BasketView(cloneTemplate(basketTemplate), events) // рамка корзины
+const basketView = new BasketView(cloneTemplate(basketTemplate), events); 
 const paymentForm = new PaymentForm(cloneTemplate(paymentTemplate), events)
 const contactsForm = new ContactsForm(cloneTemplate(contactsTemplate), events)
+const succesOrder = new SuccessOrder(cloneTemplate(succesTemplate), events); 
 
 //-------------------------------------------------------------------------------------------------------->
 
@@ -50,6 +50,7 @@ events.on('items:changed', () => {
   const productsHTMLArray = pageData.items.map(item => new CardGallery(cloneTemplate(catalogTemplate), events).render(item));
   pageView.render({ gallery: productsHTMLArray })
 })
+
 
 // Открытие превью карточки 
 
@@ -73,27 +74,6 @@ events.on('basket:change', (data: { id: string }) => {
   pageView.counter = pageData.basket.length 
 })
 
-
-// // Изменение наполнения корзины
-// events.on('shoppingCart:change', () => {
-
-// 	shoppingCart.items = appData.shoppingCart.map((item, cartItemIndex) => {
-// 		const card = new ProductCard(cloneTemplate(cardInShoppingCartTemplate), {
-// 			onClick: () => {
-// 				events.emit('cardInShoppingCart:remove', item);
-// 				// Проверяем, не пора ли блокировать кнопку, если в корзине не осталось товаров
-// 				shoppingCart.buttonToggler = appData.shoppingCart.map((item) => item.id)
-// 			},
-// 		});
-// 		return card.render({
-// 			cartItemIndex: cartItemIndex + 1,
-// 			title: item.title,
-// 			price: item.price,
-// 		});
-// 	});
-// });
-
-
 // Заполняем и отрисовываем модалку корзины
 
 events.on('basket:open', () => {
@@ -108,21 +88,17 @@ events.on('basket:open', () => {
   modal.render({content: basketView.render({items: basketItem, totalPrice: pageData.getTotalBasketPrice()}) })
 })
 
-
-const cardInBasket = new CardInBasket(cloneTemplate(basketContentTemplate), events);
-
 // Если продукт удалили из корзины в модальном окне, удаляем его из массива,перерисовываем корзину и счетчик
 events.on('basket:remove', (data: {id: string}) => {
   pageData.removeFromBasket(pageData.getItem(data.id));
   basketView.buttonToggler = pageData.basket.map((item) => item.id)
-
   modal.render({content: basketView.render({totalPrice: pageData.getTotalBasketPrice()}) })
   pageView.counter = pageData.basket.length;
   
 })
 
 // Оформление заказа 
-// способ оплаты
+// Способ оплаты
 
 events.on('order:open', () => {
   modal.render({content: paymentForm.render({
@@ -133,7 +109,7 @@ events.on('order:open', () => {
   })})
 })
 
-// Изменения в полях формы оплаты
+// изменения в полях формы оплаты
 
 events.on(
 	/^order\..*:change/,
@@ -142,7 +118,7 @@ events.on(
 	}
 );
 
-// Проверка валидации формы оплаты
+// проверка валидации формы оплаты
 
 events.on('form.payment:change', (errors: Partial<IPaymentForm>) => {
   const { address, payment } = errors;
@@ -152,7 +128,7 @@ events.on('form.payment:change', (errors: Partial<IPaymentForm>) => {
 		.join('; ');
 })
 
-// контактные данные
+// Контактные данные
 
 events.on('order:submit', () => {
     modal.render({content: contactsForm.render({
@@ -171,7 +147,6 @@ events.on(
 	}
 );
 
-
 // Проверка валидации формы 
 
 events.on('form.contacts:change', (errors: Partial<IContactsForm>) => {
@@ -182,7 +157,29 @@ events.on('form.contacts:change', (errors: Partial<IContactsForm>) => {
 		.join('; ');
 })
 
+// Завершение заказа
 
+events.on('contacts:submit', () => {
+		modal.render({content: succesOrder.render({total: 2})})
+})
+
+// events.on('contacts:submit', () => {
+// 	api.orderProducts({...appData.order, items: appData.shoppingCart.map((item) => item.id), total: appData.getTotal()})
+// 		.then((res) => {
+// 			appData.clearShoppingCart(),
+// 			shoppingCart.resetCartView(),
+// 			appData.clearOrder(),
+// 			page.counter = 0,
+// 			modal.render({
+// 				content: success.render({
+// 				total: res.total,
+// 				}),
+// 			});
+// 		})
+// 		.catch((error) => {
+// 			console.log(error);
+// 		});
+// });
 
 
 

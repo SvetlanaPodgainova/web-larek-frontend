@@ -23,13 +23,12 @@ export class FormView<T> extends Component<IFormState> {
       const field = target.name as keyof T; // имя инпута - ключ
       const value = target.value; // введённые данные в инпут
       this.onInputChange(field, value);
-
-      this._submit
     });
 
     this.container.addEventListener('submit', (e: Event) => {
       e.preventDefault();
       this.events.emit(`${this.container.name}:submit`);
+      console.log(`Emitting event: ${this.container.name}:submit`);                  
     });
   }
 
@@ -55,6 +54,5 @@ export class FormView<T> extends Component<IFormState> {
     Object.assign(this, inputs);
     this._submit.disabled = !valid;
     return this.container;
-
   }
 }

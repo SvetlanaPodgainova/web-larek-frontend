@@ -6,7 +6,7 @@ export class PageData {
   protected _items: IProduct[] = [];
   protected _basket: IProduct[] = [];
   protected formErrors: FormErrors = {};
-  protected order: IPaymentForm & IContactsForm = {
+  protected _order: IPaymentForm & IContactsForm = {
     payment: '',
     address: '',
     email: '',
@@ -30,6 +30,10 @@ export class PageData {
 
   // Корзина
 
+  get basket() {
+    return this._basket
+  }
+
   addToBasket(item: IProduct): void {
     item.inBasket = true;
     this._basket.push(item);
@@ -44,14 +48,22 @@ export class PageData {
     return this._basket.reduce((acc, item) => acc + item.price, 0);
   }
 
-  get basket() {
-    return this._basket
+  clearBasket() {
+    this._basket = [];
+    this._items.forEach((product) => {
+      product.inBasket = false
+    })
   }
 
   // Заказ
 
+  get order() {
+    return this._order
+
+  }
+
   setPaymentFormField(field: keyof IPaymentForm, value: string) {
-    this.order[field] = value;
+    this._order[field] = value;
     if (this.validatePaymentForm()) {
       return;
     }
@@ -59,10 +71,10 @@ export class PageData {
 
   validatePaymentForm(): boolean {
     const errors: typeof this.formErrors = {};
-    if (!this.order.payment) {
+    if (!this._order.payment) {
       errors.payment = 'Необходимо выбрать способ оплаты';
     }
-    if (!this.order.address) {
+    if (!this._order.address) {
       errors.address = 'Необходимо указать адрес доставки';
     }
     this.formErrors = errors;
@@ -71,7 +83,7 @@ export class PageData {
   }
 
   setContactsFormField(field: keyof IContactsForm, value: string) {
-    this.order[field] = value;
+    this._order[field] = value;
     if (this.validateContactsForm()) {
       return;
     }
@@ -79,14 +91,23 @@ export class PageData {
 
   validateContactsForm(): boolean {
     const errors: typeof this.formErrors = {};
-    if (!this.order.email) {
+    if (!this._order.email) {
       errors.email = 'Необходимо указать email';
     }
-    if (!this.order.phone) {
+    if (!this._order.phone) {
       errors.phone = 'Необходимо указать телефон';
     }
     this.formErrors = errors;
     this.events.emit('form.contacts:change', this.formErrors);
     return Object.keys(errors).length === 0;
   }
+
+  clearOrder() {
+		this._order = {
+			payment: '',
+			address: '',
+			email: '',
+			phone: '',
+		};
+	}
 }

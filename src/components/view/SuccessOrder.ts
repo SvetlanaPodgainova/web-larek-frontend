@@ -10,14 +10,8 @@ export class SuccessOrder extends Component<IOrderResult> {
   constructor(protected container: HTMLElement, protected events: IEvents) {
     super(container);
 
-    this._total = ensureElement<HTMLElement>(
-      '.order-success__description',
-      this.container
-    );
-    this._close = ensureElement<HTMLButtonElement>(
-      '.order-success__close',
-      this.container
-    )
+    this._total = ensureElement('.order-success__description', this.container);
+    this._close = ensureElement('.order-success__close', this.container) as HTMLButtonElement;
   }
 
   set total(value: number) {

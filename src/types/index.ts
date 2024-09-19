@@ -14,14 +14,10 @@ export interface IProduct {
 
 export type TProductCategory = "софт-скил" | "кнопка" | "другое" | "хард-скил" | "дополнительное";
 
-// Тип оплаты
-
-export type TPaymentMethod = "online" | "offline"
-
 // Интерфейс для объекта пользователя, который отправляем на сервер
 
 export interface IOrderData {
-  payment: TPaymentMethod;
+  payment: string;
   email: string;
   phone: string;
   address: string;

@@ -62,6 +62,7 @@ export class EventEmitter implements IEvents {
      * Слушать все события
      */
     onAll(callback: (event: EmitterEvent) => void) {
+        console.log("Registering callback for all events");
         this.on("*", callback);
     }
 

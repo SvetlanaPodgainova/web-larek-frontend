@@ -38,7 +38,6 @@ class CardView extends Component<IProduct> {
       this.toggleClass(this.productCategory, this.CategoryСolor[value], true);
     }    
   }
-
  
   set title(value: string) {
     this.setText(this.productTitle, value)
