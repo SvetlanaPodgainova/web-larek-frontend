@@ -108,7 +108,6 @@ export class cardPreview extends CardView {
     })
   }
 
-
   toggleButtonText(item: IProduct) {
     if (item.inBasket) {
       this.setText(this.cardButton, 'Удалить из корзины');
@@ -126,7 +125,6 @@ export class CardInBasket extends CardView {
     this.productIndex = ensureElement('.basket__item-index', this.container);
     this.cardButton = ensureElement('.basket__item-delete', this.container) as HTMLButtonElement;
    
-
     this.cardButton.addEventListener('click', () => {
       this.deleteProduct()
       this.container = null;

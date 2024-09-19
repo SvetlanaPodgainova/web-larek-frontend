@@ -29,6 +29,7 @@ const succesTemplate: HTMLTemplateElement = document.querySelector('#contacts') 
 const pageData = new PageData(events);
 const pageView = new PageView(ensureElement('.gallery'), events)
 const modal = new ModalView(ensureElement('#modal-container'), events); // рамка для модалок
+const basketView = new BasketView(cloneTemplate(basketTemplate), events); // оболочка корзины
 
 const cardInPreview = new cardPreview(cloneTemplate(previewTemplate), events);
 // const basketView = new BasketView(cloneTemplate(basketTemplate), events) // рамка корзины
@@ -72,24 +73,52 @@ events.on('basket:change', (data: { id: string }) => {
   pageView.counter = pageData.basket.length 
 })
 
+
+// // Изменение наполнения корзины
+// events.on('shoppingCart:change', () => {
+
+// 	shoppingCart.items = appData.shoppingCart.map((item, cartItemIndex) => {
+// 		const card = new ProductCard(cloneTemplate(cardInShoppingCartTemplate), {
+// 			onClick: () => {
+// 				events.emit('cardInShoppingCart:remove', item);
+// 				// Проверяем, не пора ли блокировать кнопку, если в корзине не осталось товаров
+// 				shoppingCart.buttonToggler = appData.shoppingCart.map((item) => item.id)
+// 			},
+// 		});
+// 		return card.render({
+// 			cartItemIndex: cartItemIndex + 1,
+// 			title: item.title,
+// 			price: item.price,
+// 		});
+// 	});
+// });
+
+
 // Заполняем и отрисовываем модалку корзины
 
 events.on('basket:open', () => {
-  const basketView = new BasketView(cloneTemplate(basketTemplate), events) // оболочка корзины
-  // для каждого продукта в корзине отрисовываем его темплейт
-  const basketItem = pageData.basket.map((product, index) => {
+    // для каждого продукта в корзине отрисовываем его темплейт
+    const basketItem = pageData.basket.map((product, index) => {
     const cardInBasket = new CardInBasket(cloneTemplate(basketContentTemplate), events);
     cardInBasket.index = index
+    basketView.buttonToggler = pageData.basket.map((item) => item.id)
     return cardInBasket.render(product)
   })
   // контент модалки - отрисованная оболочка корзины, где список товаров - отрисованный темплейт
   modal.render({content: basketView.render({items: basketItem, totalPrice: pageData.getTotalBasketPrice()}) })
 })
 
-// Если продукт удалили из корзины в модальном окне, удаляем его из массива и перерисовываем счетчик
+
+const cardInBasket = new CardInBasket(cloneTemplate(basketContentTemplate), events);
+
+// Если продукт удалили из корзины в модальном окне, удаляем его из массива,перерисовываем корзину и счетчик
 events.on('basket:remove', (data: {id: string}) => {
   pageData.removeFromBasket(pageData.getItem(data.id));
-  pageView.counter = pageData.basket.length 
+  basketView.buttonToggler = pageData.basket.map((item) => item.id)
+
+  modal.render({content: basketView.render({totalPrice: pageData.getTotalBasketPrice()}) })
+  pageView.counter = pageData.basket.length;
+  
 })
 
 // Оформление заказа 

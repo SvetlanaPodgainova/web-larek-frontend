@@ -5,8 +5,7 @@ import { IEvents } from "../base/events";
 
 interface IPage {
   gallery: HTMLElement[];
-  counter: number;
-  locked: boolean;
+  counter: number;  
 }
 
 export class PageView extends Component<IPage> {
