@@ -12,6 +12,9 @@ export class SuccessOrder extends Component<IOrderResult> {
 
     this._total = ensureElement('.order-success__description', this.container);
     this._close = ensureElement('.order-success__close', this.container) as HTMLButtonElement;
+
+    this._close.addEventListener("click", () =>{
+      this.events.emit('order:close')})
   }
 
   set total(value: number) {

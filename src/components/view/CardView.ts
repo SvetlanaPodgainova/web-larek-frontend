@@ -36,9 +36,9 @@ class CardView extends Component<IProduct> {
     this.setText(this.productCategory, value);
     if (this.productCategory) {
       this.toggleClass(this.productCategory, this.CategoryСolor[value], true);
-    }    
+    }
   }
- 
+
   set title(value: string) {
     this.setText(this.productTitle, value)
   }
@@ -71,9 +71,9 @@ class CardView extends Component<IProduct> {
     this.setText(this.productIndex, `${index + 1}`);
   }
 
-  protected deleteProduct () {
-    this.container.remove();   
-}
+  protected deleteProduct() {
+    this.container.remove();
+  }
 }
 
 export class CardGallery extends CardView {
@@ -123,11 +123,11 @@ export class CardInBasket extends CardView {
 
     this.productIndex = ensureElement('.basket__item-index', this.container);
     this.cardButton = ensureElement('.basket__item-delete', this.container) as HTMLButtonElement;
-   
+
     this.cardButton.addEventListener('click', () => {
       this.deleteProduct()
       this.container = null;
-      events.emit('basket:remove', {id: this.productId})      
+      events.emit('basket:remove', { id: this.productId })
     })
 
   }

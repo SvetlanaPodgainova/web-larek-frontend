@@ -28,7 +28,7 @@ export class FormView<T> extends Component<IFormState> {
     this.container.addEventListener('submit', (e: Event) => {
       e.preventDefault();
       this.events.emit(`${this.container.name}:submit`);
-      console.log(`Emitting event: ${this.container.name}:submit`);                  
+      console.log(`Emitting event: ${this.container.name}:submit`);
     });
   }
 
@@ -43,7 +43,7 @@ export class FormView<T> extends Component<IFormState> {
     this._submit.disabled = !value;
   }
 
-    set errors(value: string) {
+  set errors(value: string) {
     this.setText(this._errors, value);
   }
 
