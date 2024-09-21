@@ -11,17 +11,17 @@ export interface IBasketView {
 export class BasketView extends Component<IBasketView> {
 
   protected basketList: HTMLElement;
-  protected basketOrderButton: HTMLButtonElement;
+  protected _basketOrderButton: HTMLButtonElement;
   protected basketTotalPrice: HTMLSpanElement;
 
   constructor(container: HTMLElement, protected events: IEvents) {
     super(container)
 
     this.basketList = ensureElement('.basket__list', this.container);
-    this.basketOrderButton = ensureElement('.basket__button', this.container) as HTMLButtonElement;
+    this._basketOrderButton = ensureElement('.basket__button', this.container) as HTMLButtonElement;
     this.basketTotalPrice = ensureElement('.basket__price', this.container);
 
-    this.basketOrderButton.addEventListener('click', () => {
+    this._basketOrderButton.addEventListener('click', () => {
       this.events.emit('order:open');
     });
   }
@@ -42,9 +42,9 @@ export class BasketView extends Component<IBasketView> {
     }
   }
 
-  set buttonToggler(items: string[]) {
-    items.length
-      ? this.setDisabled(this.basketOrderButton, false)
-      : this.setDisabled(this.basketOrderButton, true);
+  setBasketOrderButton(length: number){
+    length > 0
+      ? this.setDisabled(this._basketOrderButton, false)
+      : this.setDisabled(this._basketOrderButton, true);
   }
 }

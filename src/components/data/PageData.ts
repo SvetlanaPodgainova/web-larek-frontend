@@ -35,12 +35,10 @@ export class PageData {
   }
 
   addToBasket(item: IProduct): void {
-    item.inBasket = true;
-    this._basket.push(item);
+     this._basket.push(item);
   }
 
   removeFromBasket(item: IProduct): void {
-    item.inBasket = false;
     this._basket = this._basket.filter((basketItem) => basketItem.id !== item.id);
   }
 
@@ -59,7 +57,6 @@ export class PageData {
 
   get order() {
     return this._order
-
   }
 
   setPaymentFormField(field: keyof IPaymentForm, value: string) {

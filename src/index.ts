@@ -1,9 +1,9 @@
 import { EventEmitter } from './components/base/events';
 import { PageData } from './components/data/PageData';
-import { CardGallery, cardPreview, CardInBasket } from './components/view/CardView';
+import { CardGallery, CardPreview, CardInBasket } from './components/view/CardView';
 import { PageView } from './components/view/PageView';
 import '/src/scss/styles.scss';
-import { IContactsForm, IPaymentForm, IProduct } from './types';
+import { IContactsForm, IPaymentForm} from './types';
 import { cloneTemplate, ensureElement } from './utils/utils';
 import { API_URL, CDN_URL } from './utils/constants';
 import { LarekApi } from './components/base/LarekApi';
@@ -29,7 +29,7 @@ const succesTemplate: HTMLTemplateElement = document.querySelector('#success') /
 const pageData = new PageData(events);
 const pageView = new PageView(ensureElement('.gallery'), events)
 const modal = new ModalView(ensureElement('#modal-container'), events); // рамка для модалок
-const cardInPreview = new cardPreview(cloneTemplate(previewTemplate), events);
+const cardInPreview = new CardPreview(cloneTemplate(previewTemplate), events);
 const basketView = new BasketView(cloneTemplate(basketTemplate), events);
 const paymentForm = new PaymentForm(cloneTemplate(paymentTemplate), events)
 const contactsForm = new ContactsForm(cloneTemplate(contactsTemplate), events)
@@ -66,8 +66,8 @@ events.on('basket:change', (data: { id: string }) => {
   const productItem = pageData.getItem(data.id);
   // в зависимости есть товар в корзине или нет меняется функционал кнопки
   productItem.inBasket
-    ? pageData.removeFromBasket(productItem)
-    : pageData.addToBasket(productItem);
+  ? (pageData.removeFromBasket(productItem), productItem.inBasket = false)
+  : (pageData.addToBasket(productItem), productItem.inBasket = false)
   modal.close()
   pageView.counter = pageData.basket.length
 })
@@ -76,7 +76,7 @@ events.on('basket:change', (data: { id: string }) => {
 
 events.on('basket:open', () => {
   // проверяем есть ли товар в корзине для кнопки
-  basketView.buttonToggler = pageData.basket.map((item) => item.id)
+  basketView.setBasketOrderButton(pageData.basket.length)
   // для каждого продукта в корзине отрисовываем его темплейт
   const basketItem = pageData.basket.map((product, index) => {
     const cardInBasket = new CardInBasket(cloneTemplate(basketContentTemplate), events);
@@ -90,7 +90,7 @@ events.on('basket:open', () => {
 // Если продукт удалили из корзины в модальном окне, удаляем его из массива,перерисовываем корзину и счетчик
 events.on('basket:remove', (data: { id: string }) => {
   pageData.removeFromBasket(pageData.getItem(data.id));
-  basketView.buttonToggler = pageData.basket.map((item) => item.id)
+  basketView.setBasketOrderButton(pageData.basket.length)
   modal.render({ content: basketView.render({ totalPrice: pageData.getTotalBasketPrice() }) })
   pageView.counter = pageData.basket.length;
 })

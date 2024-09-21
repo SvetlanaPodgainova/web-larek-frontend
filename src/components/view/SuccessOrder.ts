@@ -17,7 +17,7 @@ export class SuccessOrder extends Component<IOrderResult> {
       this.events.emit('order:close')})
   }
 
-  set total(value: number) {
-    this._total.textContent = `Списано ${value} синапсов`;
+  set total(value: number) { 
+    this.setText(this._total, `Списано ${value} синапсов`)
   }
 }

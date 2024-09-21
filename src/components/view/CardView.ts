@@ -92,7 +92,7 @@ export class CardGallery extends CardView {
   }
 }
 
-export class cardPreview extends CardView {
+export class CardPreview extends CardView {
 
   constructor(protected container: HTMLElement, protected events: IEvents) {
     super(container, events);
