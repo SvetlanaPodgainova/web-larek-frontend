@@ -48,9 +48,6 @@ export class PageData {
 
   clearBasket() {
     this._basket = [];
-    this._items.forEach((product) => {
-      product.inBasket = false
-    })
   }
 
   // Заказ

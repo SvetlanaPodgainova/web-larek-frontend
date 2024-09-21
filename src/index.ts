@@ -87,7 +87,7 @@ events.on('basket:open', () => {
   modal.render({ content: basketView.render({ items: basketItem, totalPrice: pageData.getTotalBasketPrice() }) })
 })
 
-// Если продукт удалили из корзины в модальном окне, удаляем его из массива,перерисовываем корзину и счетчик
+// Если продукт удалили из корзины в модальном окне, удаляем его из массива, перерисовываем корзину и счетчик
 events.on('basket:remove', (data: { id: string }) => {
   pageData.removeFromBasket(pageData.getItem(data.id));
   basketView.setBasketOrderButton(pageData.basket.length)
