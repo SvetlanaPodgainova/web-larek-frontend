@@ -67,7 +67,7 @@ events.on('basket:change', (data: { id: string }) => {
   // в зависимости есть товар в корзине или нет меняется функционал кнопки
   productItem.inBasket
   ? (pageData.removeFromBasket(productItem), productItem.inBasket = false)
-  : (pageData.addToBasket(productItem), productItem.inBasket = false)
+  : (pageData.addToBasket(productItem), productItem.inBasket = true)
   modal.close()
   pageView.counter = pageData.basket.length
 })
@@ -91,7 +91,13 @@ events.on('basket:open', () => {
 events.on('basket:remove', (data: { id: string }) => {
   pageData.removeFromBasket(pageData.getItem(data.id));
   basketView.setBasketOrderButton(pageData.basket.length)
-  modal.render({ content: basketView.render({ totalPrice: pageData.getTotalBasketPrice() }) })
+  // modal.render({ content: basketView.render({ totalPrice: pageData.getTotalBasketPrice() }) })
+  const basketItem = pageData.basket.map((product, index) => {
+    const cardInBasket = new CardInBasket(cloneTemplate(basketContentTemplate), events);
+    cardInBasket.index = index
+    return cardInBasket.render(product)})
+  modal.render({ content: basketView.render({ items: basketItem, totalPrice: pageData.getTotalBasketPrice() }) })
+  
   pageView.counter = pageData.basket.length;
 })
 
