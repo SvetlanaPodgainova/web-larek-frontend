@@ -8,12 +8,6 @@ class CardView extends Component<IProduct> {
   protected productTitle: HTMLElement;
   protected productPrice: HTMLSpanElement;
   protected productId: string;
-  protected productCategory?: HTMLSpanElement;
-  protected productImage?: HTMLImageElement;
-  protected productDescription?: HTMLElement;
-  protected cardButton?: HTMLButtonElement;
-  protected productIndex?: HTMLSpanElement;
-  protected basketDeleteButton?: HTMLButtonElement;
 
   constructor(container: HTMLElement, protected events: IEvents) {
     super(container)
@@ -22,6 +16,49 @@ class CardView extends Component<IProduct> {
 
     this.productTitle = ensureElement('.card__title', this.container);
     this.productPrice = ensureElement('.card__price', this.container);
+  }
+
+  set title(value: string) {
+    this.setText(this.productTitle, value)
+  }
+
+  set price(value: number | null) {
+    if (value === null) {
+      this.setText(this.productPrice, `Бесценно`);
+    } else {
+      this.setText(this.productPrice, `${value} синапсов`);
+    }
+  }
+
+  set id(value: string) {
+    this.productId = value
+  }
+
+  get id() {
+    return this.productId
+  }
+}
+
+export class CardGallery extends CardView {
+
+  protected productCategory: HTMLSpanElement;
+  protected productImage: HTMLImageElement;
+
+  constructor(protected container: HTMLElement, protected events: IEvents) {
+    super(container, events);
+
+    this.productCategory = ensureElement('.card__category', this.container);
+    this.productImage = ensureElement('.card__image', this.container) as HTMLImageElement;
+
+    if (this.container.classList.contains('gallery__item')) {
+      this.container.addEventListener('click', () => {
+        this.events.emit('card:open', { cardId: this.productId });
+      })
+    }
+  }
+
+  set image(image: string) {
+    this.setImage(this.productImage, image, this.title)
   }
 
   CategoryСolor: { [key: string]: string } = {
@@ -38,69 +75,31 @@ class CardView extends Component<IProduct> {
       this.toggleClass(this.productCategory, this.CategoryСolor[value], true);
     }
   }
-
-  set title(value: string) {
-    this.setText(this.productTitle, value)
-  }
-
-  set image(image: string) {
-    this.setImage(this.productImage, image, this.title)
-  }
-
-  set price(value: number | null) {
-    if (value === null) {
-      this.setText(this.productPrice, `Бесценно`);
-      this.setText(this.cardButton, 'Товар бесценен')
-      this.setDisabled(this.cardButton, true)
-
-    } else {
-      this.setText(this.productPrice, `${value} синапсов`);
-      this.setDisabled(this.cardButton, false)
-    }
-  }
-
-  set id(value: string) {
-    this.productId = value
-  }
-
-  get id() {
-    return this.productId
-  }
-
-  set index(index: number) {
-    this.setText(this.productIndex, `${index + 1}`);
-  }
 }
 
-export class CardGallery extends CardView {
+export class CardPreview extends CardGallery {
+
+  protected productDescription: HTMLElement;
+  protected cardButton: HTMLButtonElement;
 
   constructor(protected container: HTMLElement, protected events: IEvents) {
     super(container, events);
 
-    this.productCategory = ensureElement('.card__category', this.container);
-    this.productImage = ensureElement('.card__image', this.container) as HTMLImageElement;
-
-    if (this.container.classList.contains('gallery__item')) {
-      this.container.addEventListener('click', () => {
-        this.events.emit('card:open', { cardId: this.productId });
-      })
-    }
-  }
-}
-
-export class CardPreview extends CardView {
-
-  constructor(protected container: HTMLElement, protected events: IEvents) {
-    super(container, events);
-
-    this.productCategory = ensureElement('.card__category', this.container);
-    this.productImage = ensureElement('.card__image', this.container) as HTMLImageElement;
     this.productDescription = ensureElement('.card__text') as HTMLParagraphElement;
     this.cardButton = ensureElement('.card__button', this.container) as HTMLButtonElement;
 
     this.cardButton.addEventListener('click', () => {
       this.events.emit('basket:change', { id: this.productId })
     })
+  }
+
+  set price(value: number | null) {
+    if (value === null) {
+      this.setDisabled(this.cardButton, true)
+
+    } else {
+      this.setDisabled(this.cardButton, false)
+    }
   }
 
   toggleButtonText(item: IProduct) {
@@ -114,17 +113,22 @@ export class CardPreview extends CardView {
 
 export class CardInBasket extends CardView {
 
+  protected productIndex: HTMLSpanElement;
+  protected basketDeleteButton: HTMLButtonElement;
+
   constructor(protected container: HTMLElement, protected events: IEvents) {
     super(container, events);
 
     this.productIndex = ensureElement('.basket__item-index', this.container);
-    this.cardButton = ensureElement('.basket__item-delete', this.container) as HTMLButtonElement;
+    this.basketDeleteButton = ensureElement('.basket__item-delete', this.container) as HTMLButtonElement;
 
-    this.cardButton.addEventListener('click', () => {
-       this.container = null;
+    this.basketDeleteButton.addEventListener('click', () => {
+      this.container = null;
       events.emit('basket:remove', { id: this.productId })
     })
+  }
 
+  set index(index: number) {
+    this.setText(this.productIndex, `${index + 1}`);
   }
 }
-

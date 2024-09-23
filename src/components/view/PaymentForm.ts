@@ -34,3 +34,4 @@ export class PaymentForm extends FormView<IPaymentForm> {
 		this._submit.disabled = !value;
 	}
 }
+
