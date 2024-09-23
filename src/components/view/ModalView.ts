@@ -17,7 +17,7 @@ export class ModalView extends Component<IModalData> {
 
     this.closeButton = ensureElement('.modal__close', this.container) as HTMLButtonElement;
     this._content = ensureElement('.modal__content', container) as HTMLElement;
-    this.wrapper = ensureElement('.page__wrapper');
+    this.wrapper = document.querySelector('.page__wrapper');
 
     this._content.addEventListener('click', evt => evt.stopPropagation())
     this.closeButton.addEventListener('click', this.close.bind(this));
