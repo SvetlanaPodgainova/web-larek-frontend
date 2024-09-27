@@ -93,9 +93,14 @@ export class CardPreview extends CardGallery {
     })
   }
 
+  set description(value: string) {
+		this.setText(this.productDescription, value);
+	};
+
   set price(value: number | null) {
     if (value === null) {
       this.setDisabled(this.cardButton, true)
+      this.setText(this.cardButton, "Товар бесценен")
 
     } else {
       this.setDisabled(this.cardButton, false)
@@ -129,6 +134,6 @@ export class CardInBasket extends CardView {
   }
 
   set index(index: number) {
-    this.setText(this.productIndex, `${index + 1}`);
+    this.setText(this.productIndex, `${index + 1}`)    
   }
 }

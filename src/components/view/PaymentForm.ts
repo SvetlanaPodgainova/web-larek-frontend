@@ -4,8 +4,7 @@ import { IEvents } from "../base/events";
 import { FormView } from "./FormView";
 
 export class PaymentForm extends FormView<IPaymentForm> {
-	protected _payment:  HTMLButtonElement[];
-	protected _address: string;
+	protected _payment:  HTMLButtonElement[];	
 
 	constructor(container: HTMLFormElement, events: IEvents) {
 		super(container, events);
@@ -30,8 +29,5 @@ export class PaymentForm extends FormView<IPaymentForm> {
 		(this.container.elements.namedItem('address') as HTMLInputElement).value = value;
 	}
 
-	set valid(value: boolean) {
-		this._submit.disabled = !value;
-	}
 }
 

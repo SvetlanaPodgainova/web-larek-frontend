@@ -50,7 +50,6 @@ events.on('items:changed', () => {
   pageView.render({ gallery: productsHTMLArray })
 })
 
-
 // Открытие превью карточки 
 
 events.on('card:open', (data: { cardId: string }) => {
